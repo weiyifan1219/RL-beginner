@@ -1,4 +1,4 @@
-"""task-7-ppo 的占位自检入口；实现任务时逐步替换为数值契约。"""
+"""task-05-policy-gradient 的占位自检入口；实现任务时逐步替换为数值契约。"""
 
 from __future__ import annotations
 
@@ -24,4 +24,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

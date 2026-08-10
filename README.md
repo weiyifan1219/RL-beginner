@@ -49,7 +49,7 @@ python _eval_harness.py --check-env
 ## 通用学习循环
 
 ```bash
-cd task-1-bandit
+cd task-01-bandit
 # 1. 阅读 README 中的公式和预备问题
 # 2. 在 src/ 手写实现
 # 3. 运行任务自检（该任务实现后提供）
