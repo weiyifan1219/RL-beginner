@@ -36,15 +36,17 @@
 
 ## 环境
 
-推荐复用现有 `llm-agent` Conda 环境，Python >= 3.10（服务器上的该环境为 Python 3.11）：
+默认在 **3090 服务器**上开发、训练和验证；本机工作副本仅用于编辑、Git 同步或轻量阅读。服务器上的项目副本为 `/root/workspace/RL-beginner`，统一复用其 `llm-agent` Conda 环境（Python 3.11）：
 
 ```bash
+ssh weiyifan3090
+cd /root/workspace/RL-beginner
 conda activate llm-agent
 pip install -r requirements.txt
 python _eval_harness.py --check-env
 ```
 
-`torch` 请按 3090 的 CUDA 环境选择官方对应 wheel；不要为了本仓库重新下载 Qwen 或其他大模型。任务 9 会依次从 `RL_BEGINNER_MODEL_PATH`、`LLM_BEGINNER_MODEL_PATH` 以及既有 `llm-beginner` 模型目录寻找可复用模型；也可使用 `OPENAI_BASE_URL` 指向本地服务。
+`torch` 已使用服务器现有的 CUDA 版本；若后续缺少轻量 Python 依赖，通过服务器的反代安装即可。不要为了本仓库重新下载 Qwen 或其他大模型。任务 9 会依次从 `RL_BEGINNER_MODEL_PATH`、`LLM_BEGINNER_MODEL_PATH` 以及既有 `llm-beginner` 模型目录寻找可复用模型；也可使用 `OPENAI_BASE_URL` 指向本地服务。
 
 ## 通用学习循环
 
