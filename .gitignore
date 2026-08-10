@@ -1,0 +1,35 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Experiment artifacts
+**/runs/
+**/logs/
+**/wandb/
+**/ckpt/
+**/checkpoints/
+**/figures/*.png
+**/figures/*.pdf
+**/eval/result.json
+
+# Data and models
+**/data/*
+!**/data/.gitkeep
+!**/data/README.md
+models/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Local configuration and secrets
+.env
+.env.*
+*.local.yaml
+.DS_Store
+
