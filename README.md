@@ -22,7 +22,8 @@
 | 任务 | 状态 | 标准答案 | 教学 Notebook |
 |---|---|---|---|
 | 01 Bandit | ✅ 已完成 | [`src/`](task-01-bandit/src/) | [`task-01-bandit.ipynb`](task-01-bandit/notebooks/task-01-bandit.ipynb) |
-| 02–10 | 🚧 按顺序建设 | 各任务完成后独立提交 | 各任务完成后提供 |
+| 02 MDP 与 DP | ✅ 已完成 | [`src/`](task-02-mdp-dp/src/) | [`task-02-mdp-dp.ipynb`](task-02-mdp-dp/notebooks/task-02-mdp-dp.ipynb) |
+| 03–10 | 🚧 按顺序建设 | 各任务完成后独立提交 | 各任务完成后提供 |
 
 > 前 1–8 个任务以经典控制环境和小型实验为主；任务 9–10 再连接到本地 Qwen、偏好优化、agentic rollout 与训练基础设施。默认不下载大模型，优先复用已有本地模型目录或 OpenAI 兼容推理服务。
 
