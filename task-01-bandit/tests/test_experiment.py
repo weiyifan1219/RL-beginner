@@ -26,6 +26,10 @@ class AlwaysBestAgent:
         del action, reward
 
 
+class AlwaysSecondArmAgent(AlwaysBestAgent):
+    pass
+
+
 def test_run_episode_records_reward_optimal_action_and_expected_regret() -> None:
     result = run_episode(BernoulliBandit([0.0, 1.0], seed=0), AlwaysBestAgent(), n_steps=8)
 
@@ -34,6 +38,29 @@ def test_run_episode_records_reward_optimal_action_and_expected_regret() -> None
     np.testing.assert_array_equal(result.optimal_actions, np.ones(8, dtype=bool))
     np.testing.assert_array_equal(result.instantaneous_regret, np.zeros(8))
     np.testing.assert_array_equal(result.cumulative_regret, np.zeros(8))
+
+
+def test_every_tied_best_arm_counts_as_optimal() -> None:
+    result = run_episode(
+        BernoulliBandit([1.0, 1.0], seed=0),
+        AlwaysSecondArmAgent(),
+        n_steps=5,
+    )
+
+    np.testing.assert_array_equal(result.optimal_actions, np.ones(5, dtype=bool))
+    np.testing.assert_array_equal(result.instantaneous_regret, np.zeros(5))
+
+
+def test_nearly_best_arm_with_positive_gap_is_not_counted_as_optimal() -> None:
+    gap = 5e-13
+    result = run_episode(
+        BernoulliBandit([1.0, 1.0 - gap], seed=0),
+        AlwaysSecondArmAgent(),
+        n_steps=3,
+    )
+
+    np.testing.assert_array_equal(result.optimal_actions, np.zeros(3, dtype=bool))
+    assert np.all(result.instantaneous_regret > 0.0)
 
 
 def test_aggregated_experiment_is_reproducible_and_has_documented_shapes() -> None:
@@ -57,6 +84,18 @@ def test_aggregated_experiment_is_reproducible_and_has_documented_shapes() -> No
         assert left.shape == (40,)
         np.testing.assert_array_equal(left, right)
     assert np.all(np.diff(first.mean_cumulative_regret) >= -1e-12)
+
+
+def test_single_run_standard_error_is_undefined() -> None:
+    result = run_experiment(
+        lambda seed: BernoulliBandit([0.0, 1.0], seed=seed),
+        lambda seed: EpsilonGreedyAgent(2, epsilon=0.0, seed=seed),
+        n_runs=1,
+        n_steps=4,
+        seed=0,
+    )
+
+    assert np.all(np.isnan(result.reward_standard_error))
 
 
 def test_thompson_sampling_reaches_high_optimal_action_rate() -> None:

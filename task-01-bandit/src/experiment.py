@@ -93,8 +93,10 @@ def run_episode(env: Bandit, agent: BanditAgent, n_steps: int) -> EpisodeResult:
 
     for step in range(n_steps):
         action = agent.select_action()
-        optimal_actions[step] = action == env.optimal_arm
-        instantaneous_regret[step] = env.regret(action)
+        regret = env.regret(action)
+        instantaneous_regret[step] = regret
+        # 并列最优臂的下标可能不同，但只要期望 gap 为 0 都应计为最优动作。
+        optimal_actions[step] = regret == 0.0
         reward = env.pull(action)
         agent.update(action, reward)
         actions[step] = action
@@ -135,12 +137,16 @@ def run_experiment(
         optimal_actions[run] = episode.optimal_actions
         regrets[run] = episode.instantaneous_regret
 
-    ddof = 1 if n_runs > 1 else 0
+    if n_runs > 1:
+        reward_standard_error = np.std(rewards, axis=0, ddof=1) / np.sqrt(n_runs)
+    else:
+        # 一个观测无法估计跨 run 的标准误；NaN 比误导性的 0 更诚实。
+        reward_standard_error = np.full(n_steps, np.nan, dtype=np.float64)
     return ExperimentResult(
         n_runs=n_runs,
         n_steps=n_steps,
         mean_reward=np.mean(rewards, axis=0),
-        reward_standard_error=np.std(rewards, axis=0, ddof=ddof) / np.sqrt(n_runs),
+        reward_standard_error=reward_standard_error,
         optimal_action_rate=np.mean(optimal_actions, axis=0),
         mean_instantaneous_regret=np.mean(regrets, axis=0),
         mean_cumulative_regret=np.mean(np.cumsum(regrets, axis=1), axis=0),

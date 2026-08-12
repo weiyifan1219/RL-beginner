@@ -81,6 +81,8 @@ instant_regret_t = max_a q*_t(a) - q*_t(A_t)
 | dataclass 结果固定形状 | 输入输出契约清楚，Notebook/测试/CLI 共用 |
 | Thompson 对非二元奖励报错 | 让模型假设显式化，不静默产出错误后验 |
 | 非平稳环境在奖励后漂移 | 第 t 步 reward/regret 都对应同一个 `q_t` |
+| 最优动作由期望 gap 是否为 0 判断 | 并列最优臂不会因下标不同被错误计为次优 |
+| 单次 run 的 standard error 为 `NaN` | 一个观测无法估计跨 run 不确定性 |
 
 ## 7. 默认实验应观察什么
 

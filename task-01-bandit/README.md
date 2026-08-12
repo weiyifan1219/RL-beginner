@@ -91,6 +91,9 @@ p_a ~ Beta(alpha_a, beta_a)
 | `cumulative_regret` | `(T,)` | 即时 pseudo-regret 的累计和 |
 | 聚合曲线 | `(T,)` | 对 `R` 次独立实验逐时间步求均值 |
 
+若存在多个并列最优臂，选择其中任意一个都计为最优动作。`reward_standard_error`
+由不同 run 估计；当 `n_runs=1` 时统计上无法估计，返回 `NaN` 而不是虚假的 0。
+
 这里使用 pseudo-regret，而不是 `best_mean - sampled_reward`。后者会因奖励噪声变成负数，使“累计遗憾”下降，失去清晰含义。
 
 ## 5. 标准答案 API 与输入输出
