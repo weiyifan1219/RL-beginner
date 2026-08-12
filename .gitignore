@@ -13,6 +13,7 @@ venv/
 **/wandb/
 **/ckpt/
 **/checkpoints/
+**/outputs/
 **/figures/*.png
 **/figures/*.pdf
 **/eval/result.json
@@ -32,4 +33,3 @@ models/
 .env.*
 *.local.yaml
 .DS_Store
-

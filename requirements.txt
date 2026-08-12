@@ -5,4 +5,7 @@ Gymnasium[classic-control]>=1.0
 matplotlib>=3.8
 tensorboard>=2.16
 PyYAML>=6.0
-
+pytest>=8.0
+jupyterlab>=4.0
+nbformat>=5.10
+nbclient>=0.10

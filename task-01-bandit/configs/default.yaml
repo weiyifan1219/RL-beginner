@@ -1,0 +1,17 @@
+environment:
+  kind: bernoulli
+  probabilities: [0.1, 0.3, 0.5, 0.7, 0.9]
+
+experiment:
+  n_runs: 200
+  n_steps: 1000
+  seed: 42
+
+agents:
+  - name: epsilon-greedy
+    epsilon: 0.1
+  - name: ucb
+    c: 2.0
+  - name: thompson-sampling
+    alpha_prior: 1.0
+    beta_prior: 1.0
