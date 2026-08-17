@@ -1,19 +1,18 @@
-"""Task 01 标准答案：多臂老虎机环境、策略与实验工具。"""
+from .treasure_bandit import TreasureHuntBandit
 
-from .agents import EpsilonGreedyAgent, ThompsonSamplingAgent, UCBAgent, incremental_update
-from .bandits import BernoulliBandit, GaussianBandit, NonStationaryGaussianBandit
-from .experiment import EpisodeResult, ExperimentResult, run_episode, run_experiment
+from .greedy import GreedyAgent
+
+from .epsilon_greedy import EpsilonGreedyAgent
+
+from .ucb import UCBAgent
+
+from .thompson_sampling import ThompsonSamplingAgent
+
 
 __all__ = [
-    "BernoulliBandit",
-    "GaussianBandit",
-    "NonStationaryGaussianBandit",
+    "TreasureHuntBandit",
+    "GreedyAgent",
     "EpsilonGreedyAgent",
     "UCBAgent",
     "ThompsonSamplingAgent",
-    "EpisodeResult",
-    "ExperimentResult",
-    "incremental_update",
-    "run_episode",
-    "run_experiment",
 ]
