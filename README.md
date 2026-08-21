@@ -1,94 +1,127 @@
 # RL-Beginner：强化学习任务驱动入门
 
-面向已掌握 Python、PyTorch 和基础深度学习的学习者。本仓库按**原理与公式 → 手写实现 → 实验观察 → 成熟框架对照**的路径，逐步建立从 MDP 到大模型对齐和 RL 工程的完整认知。
+本仓库面向已经掌握 Python、PyTorch 和基础深度学习的学习者，按照“原理与公式 → 手写实现 → 实验观察 → 自检复盘”的路径，完成从多臂老虎机到现代策略优化算法的强化学习入门。
 
-## 路线图
+当前阶段完成并整理到 **Task 7**。每个任务都包含源码、教学 Notebook、实验 Notebook、学习笔记和与算法对应的独立自检脚本。
 
-| 任务 | 主题 | 主要问题 | 阶段产出 |
+## 学习路线
+
+| 任务 | 主题 | 核心问题 | 主要实现 |
 |---|---|---|---|
-| 1 | 多臂老虎机 | 探索与利用如何权衡？ | bandit 模拟器、ε-greedy/UCB/Thompson 对比 |
-| 2 | MDP 与动态规划 | Bellman 方程如何求解最优策略？ | policy/value iteration、GridWorld |
-| 3 | 表格型 RL | 没有模型时如何从经验学习？ | MC、TD(0)、SARSA、Q-Learning |
-| 4 | DQN | 如何用神经网络近似 Q 函数？ | replay buffer、target network、CartPole |
-| 5 | Policy Gradient | 如何直接优化随机策略？ | REINFORCE、baseline、回报归一化 |
-| 6 | Actor-Critic 与 GAE | 如何降低策略梯度方差？ | A2C、GAE、优势估计实验 |
-| 7 | PPO | 如何稳定地进行策略更新？ | clipped objective、rollout、MiniBatch 更新 |
-| 8 | SAC | 熵正则和连续控制如何结合？ | twin Q、温度调节、Pendulum |
-| 9 | Offline RL 与 DPO | 离线数据和偏好数据怎样替代在线奖励？ | CQL/IQL 概念实验、Qwen DPO 复用接口 |
-| 10 | MiniRL、Agentic 与 Infra | 算法如何变成可训练、可观测的系统？ | vector env、rollout worker、日志/检查点、agentic RL 实验 |
+| Task 1 | 多臂老虎机 | 如何平衡探索与利用？ | Greedy、ε-greedy、UCB、Beta-Bernoulli Thompson Sampling |
+| Task 2 | MDP 与动态规划 | 已知环境模型时如何求解价值和策略？ | GridWorld、Policy Evaluation、Policy Iteration、Value Iteration |
+| Task 3 | 表格型强化学习 | 没有环境模型时如何从经验学习？ | Monte Carlo、TD(0)、SARSA、Q-Learning |
+| Task 4 | DQN | 如何用神经网络近似动作价值函数？ | Q Network、Replay Buffer、TD 更新、Target Network |
+| Task 5 | Policy Gradient | 如何直接优化随机策略？ | Return、REINFORCE、Baseline、策略梯度更新 |
+| Task 6 | Actor-Critic | 如何降低策略梯度的方差并提高样本效率？ | Actor-Critic、n-step Actor-Critic、TD residual、GAE |
+| Task 7 | TRPO / PPO | 如何在策略更新时控制步长并提升稳定性？ | Rollout Buffer、GAE、PPO clipping、TRPO trust region |
 
-## 当前进度
+## Task 1–7 交付内容
 
-| 任务 | 状态 | 标准答案 | 教学 Notebook |
-|---|---|---|---|
-| 01 Bandit | ✅ 实现与教学材料 | [`src/`](task-01-bandit/src/) | [`01-learning`](task-01-bandit/notebooks/01-learning.ipynb) + [`02-experiments`](task-01-bandit/notebooks/02-experiments.ipynb) |
-| 02 MDP 与 DP | ✅ 实现与教学材料 | [`src/`](task-02-mdp-dp/src/) | [`01-learning`](task-02-mdp-dp/notebooks/01-learning.ipynb) + [`02-experiments`](task-02-mdp-dp/notebooks/02-experiments.ipynb) |
-| 03–06 | ✅ 源码、Notebook 与笔记已补齐 | 各任务 README 与 notes | 各任务 `01-learning` + `02-experiments` |
-| 07 TRPO/PPO | ✅ 源码、Notebook 与笔记已补齐 | [`src/`](task-07-trpo_ppo/src/) | [`01-learning`](task-07-trpo_ppo/notebooks/01-learning.ipynb) + [`02-experiments`](task-07-trpo_ppo/notebooks/02-experiments.ipynb) |
-| 08–10 | 🚧 按顺序建设 | 各任务完成后独立提交 | 各任务完成后提供 |
+| 任务 | 源码目录 | 学习 Notebook | 实验 Notebook | 自检 |
+|---|---|---|---|---|
+| Task 1 | [task-01-bandit/src](task-01-bandit/src/) | [01-learning.ipynb](task-01-bandit/notebooks/01-learning.ipynb) | [02-experiments.ipynb](task-01-bandit/notebooks/02-experiments.ipynb) | [eval/run.py](task-01-bandit/eval/run.py) |
+| Task 2 | [task-02-mdp-dp/src](task-02-mdp-dp/src/) | [01-learning.ipynb](task-02-mdp-dp/notebooks/01-learning.ipynb) | [02-experiments.ipynb](task-02-mdp-dp/notebooks/02-experiments.ipynb) | [eval/run.py](task-02-mdp-dp/eval/run.py) |
+| Task 3 | [task-03-tabular-rl/src](task-03-tabular-rl/src/) | [01-learning.ipynb](task-03-tabular-rl/notebooks/01-learning.ipynb) | [02-experiments.ipynb](task-03-tabular-rl/notebooks/02-experiments.ipynb) | [eval/run.py](task-03-tabular-rl/eval/run.py) |
+| Task 4 | [task-04-dqn/src](task-04-dqn/src/) | [01-learning.ipynb](task-04-dqn/notebooks/01-learning.ipynb) | [02-experiments.ipynb](task-04-dqn/notebooks/02-experiments.ipynb) | [eval/run.py](task-04-dqn/eval/run.py) |
+| Task 5 | [task-05-policy-gradient/src](task-05-policy-gradient/src/) | [01-learning.ipynb](task-05-policy-gradient/notebooks/01-learning.ipynb) | [02-experiments.ipynb](task-05-policy-gradient/notebooks/02-experiments.ipynb) | [eval/run.py](task-05-policy-gradient/eval/run.py) |
+| Task 6 | [task-06-actor-critic/src](task-06-actor-critic/src/) | [01-learning.ipynb](task-06-actor-critic/notebooks/01-learning.ipynb) | [02-experiments.ipynb](task-06-actor-critic/notebooks/02-experiments.ipynb) | [eval/run.py](task-06-actor-critic/eval/run.py) |
+| Task 7 | [task-07-trpo_ppo/src](task-07-trpo_ppo/src/) | [01-learning.ipynb](task-07-trpo_ppo/notebooks/01-learning.ipynb) | [02-experiments.ipynb](task-07-trpo_ppo/notebooks/02-experiments.ipynb) | [eval/run.py](task-07-trpo_ppo/eval/run.py) |
 
-> 前 1–8 个任务以经典控制环境和小型实验为主；任务 9–10 再连接到本地 Qwen、偏好优化、agentic rollout 与训练基础设施。默认不下载大模型，优先复用已有本地模型目录或 OpenAI 兼容推理服务。
+## 每个任务的学习重点
 
-## 教学约定
+### Task 1：多臂老虎机
 
-每个任务目录均包含：
+从无状态的 Bernoulli bandit 开始，理解真实价值、采样奖励、增量均值估计和 pseudo-regret。实验比较 Greedy、ε-greedy、UCB 与 Thompson Sampling 在探索行为、平均奖励和最优动作率上的差异。
 
-| 目录/文件 | 用途 |
-|---|---|
-| `README.md` | 原理、DoD、步骤、实验与接口约定 |
-| `src/` | 学习者手写算法的位置 |
-| `data/` | 小数据、离线数据或环境配置；不提交大文件 |
-| `eval/` | 后续任务补充的自检与 tutor prompt |
-| `figures/` | 曲线、策略图、轨迹图等实验结果 |
-| `notes/` | 实验观察、推导笔记和复盘 |
+### Task 2：MDP 与动态规划
 
-根目录 `_eval_harness.py` 提供统一的最小评测壳。现在它只做结构与环境检查；随着每个任务逐一实现，再把该任务的数值契约加入对应 `eval/run.py`。
+在已知转移概率和奖励的 GridWorld 中实现 Bellman backup。先进行固定策略评估，再通过 Policy Iteration 和 Value Iteration 求解最优价值函数与策略，观察两种动态规划方法的收敛过程。
 
-## 环境
+### Task 3：表格型强化学习
 
-推荐使用 Python >= 3.10 的 Conda 环境：
+从模型无关的角度学习状态价值和动作价值估计。Notebook 对比 Monte Carlo 的完整回报、TD(0) 的 bootstrap、SARSA 的 on-policy 更新和 Q-Learning 的 off-policy 更新。
+
+### Task 4：DQN
+
+将表格 Q-Learning 扩展到神经网络，理解经验回放、目标网络和 TD target 对训练稳定性的作用。实验围绕 Q 网络输出、Replay Buffer 采样和 CartPole 风格控制任务展开。
+
+### Task 5：Policy Gradient
+
+直接对策略分布进行优化。先理解折扣回报和 log-probability，再实现 REINFORCE，并加入 baseline 和回报归一化以观察方差变化。原有多个学习 Notebook 已整理为统一的 `01-learning.ipynb` 和 `02-experiments.ipynb` 入口，同时保留原始材料。
+
+### Task 6：Actor-Critic
+
+用 Critic 估计价值并为 Actor 提供低方差学习信号。内容覆盖一步 TD、n-step return、terminal target 和 GAE。异常命名的原始 Notebook 已补充规范的 `01-learning.ipynb` 入口，实验统一放在 `02-experiments.ipynb`。
+
+### Task 7：TRPO / PPO
+
+在策略梯度基础上加入受约束的策略更新。Notebook 和源码覆盖 rollout 收集、GAE、PPO clipped objective、approximate KL、clip fraction，以及 TRPO 的 Fisher-vector product、共轭梯度和 line search。目录统一为 `task-07-trpo_ppo`。
+
+## 统一目录约定
+
+每个已完成任务遵循以下结构：
+
+```text
+task-XX-*/
+├── README.md
+├── src/                  # 算法实现
+├── notebooks/
+│   ├── 01-learning.ipynb
+│   └── 02-experiments.ipynb
+├── notes/                # 推导、实验记录与复盘
+└── eval/
+    └── run.py            # 当前任务专属的最小自检
+```
+
+Notebook 负责解释、可视化和实验调用，核心算法保留在 `src/`。公式使用 Markdown 的 `$$ ... $$` 块，确保 Jupyter 和 GitHub 页面都能正常渲染。
+
+## 运行环境
+
+推荐使用 Python 3.10 及以上的 Conda 环境：
 
 ```bash
+conda activate llm-agent
 pip install -r requirements.txt
-python _eval_harness.py --check-env
 ```
 
-`torch` 请按本机或服务器的 CUDA 环境选择官方对应 wheel；不要为了本仓库重新下载 Qwen 或其他大模型。任务 9 会依次从 `RL_BEGINNER_MODEL_PATH`、`LLM_BEGINNER_MODEL_PATH` 以及已有模型目录寻找可复用模型；也可使用 `OPENAI_BASE_URL` 指向本地服务。
+不需要为了本仓库下载大模型；Task 1–7 的实验均以小型环境、表格数据或轻量神经网络为主。
 
-## 通用学习循环
+## 运行自检
+
+从仓库根目录运行全部 Task 1–7 的任务专属检查：
 
 ```bash
-cd task-01-bandit
-# 1. 阅读 README 中的公式和预备问题
-# 2. 在 src/ 手写实现
-# 3. 运行任务自检（该任务实现后提供）
 python eval/run.py
-# 4. 保存 figures/ 与 notes/ 中的观察
 ```
 
-1. 先自己推导 Bellman backup、return、advantage 和目标函数，再看代码。
-2. 先完成最小版本，再做一个可解释的消融；不要一开始套 Stable-Baselines3。
-3. 每次实验至少记录随机种子、环境版本、超参、曲线和失败现象。
-4. 完成手写版本后，才用 Gymnasium、Stable-Baselines3、TRL 等框架对照 API 与工程取舍。
+只检查某一个任务：
 
-## 文档
+```bash
+python eval/run.py --task 1
+python eval/run.py --task 7
+```
+
+根目录脚本只负责调度；真正的检查逻辑位于每个任务自己的 `eval/run.py`，并根据任务算法验证不同的数值契约。例如：
+
+- Task 1 检查 sample-average 更新和 Thompson Sampling 的二值奖励约束；
+- Task 2 检查 GridWorld 转移、策略评估以及 PI/VI 的价值一致性；
+- Task 3 检查 MC、TD、SARSA 和 Q-Learning 的更新结果；
+- Task 4 检查 Q 网络、经验回放和 DQN TD 更新；
+- Task 5 检查折扣回报、策略分布和 REINFORCE 更新；
+- Task 6 检查一步 / n-step Actor-Critic 与 terminal target；
+- Task 7 检查 GAE、rollout buffer、PPO 诊断量和 TRPO 构造。
+
+自检用于快速发现接口和核心数值错误，不替代完整训练实验。实验结果应记录随机种子、环境、超参数、曲线和失败现象，并写入对应 `notes/`。
+
+## 相关文档
 
 - [强化学习速查表](docs/rl-cheatsheet.md)
 - [数学预备知识](docs/math-basics.md)
 - [术语表](docs/glossary.md)
 
+当前 README 和本阶段交付范围截至 **Task 7**；后续任务将在单独整理后再加入路线图。
+
 ## 许可证
 
 [MIT License](LICENSE)。
-
-## Task 1--7 当前交付约定
-
-本阶段以 3090 工作树中的实际源码和 Notebook 为准。每个任务 README 说明当前模块契约、公式、实验要求和提交文件；每个任务至少有一个学习入口和一个实验入口。Task 05 的原始四份 Notebook 已额外合并为规范的 `01-learning.ipynb` / `02-experiments.ipynb`，Task 06 的异常命名 Notebook 也提供了规范入口。
-
-统一检查命令：
-
-```bash
-python eval/run.py
-```
-
-该检查验证 README、notes、Notebook JSON/cell id/Markdown 公式和源码最小导入；它不替代训练实验，也不会把未记录的实验结果当作结论。
