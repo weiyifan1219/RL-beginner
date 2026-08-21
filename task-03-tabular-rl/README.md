@@ -1,54 +1,47 @@
 # 任务三：表格型 RL：MC、TD、SARSA 与 Q-Learning
 
-> 主路线见仓库根 [README](../README.md)。本任务是一个可逐步填充的学习单元：先推导，再在 `src/` 中手写，再用实验解释现象，最后才对照成熟框架。
+## 目标
 
-## 一句话目标
+从已知模型的 DP 转向 model-free 学习：智能体只能看到 `(S_t,A_t,R_{t+1},S_{t+1})`，通过采样估计价值和动作价值。
 
-在不知道环境转移模型时，比较 Monte Carlo、TD(0)、SARSA 和 Q-Learning 如何从交互经验估计价值并控制。
+## 核心公式
 
-## 核心概念
+完整回报：
 
-model-free；bootstrapping；on/off-policy；ε-soft 策略
+$$
+G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots.
+$$
 
-## 本任务交付
+TD(0)：
 
-在 CliffWalking 或 FrozenLake 上分别训练四类算法，解释 SARSA 与 Q-Learning 在风险路径上的差异。
+$$
+V(S_t)\leftarrow V(S_t)+\alpha[R_{t+1}+\gamma V(S_{t+1})-V(S_t)].
+$$
 
-## Definition of Done
+SARSA 使用实际下一动作：
 
-- [ ] M1：first-visit MC
-- [ ] M2：TD(0) value prediction
-- [ ] M3：SARSA control
-- [ ] M4：Q-Learning control
-- [ ] M5：同一评测协议下作图对照。
+$$
+Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha[R_{t+1}+\gamma Q(S_{t+1},A_{t+1})-Q(S_t,A_t)].
+$$
 
-## 建议步骤
+Q-Learning 使用贪心目标：
 
-1. 在 `notes/` 手写或整理关键公式，标明每一个期望来自何处。
-2. 先创建最小的、可复现的环境与随机种子，完成 `src/` 的朴素实现。
-3. 增加训练循环和评测循环，输出曲线到 `figures/`、指标到 `notes/`。
-4. 做至少一个只改动一个变量的对照实验，并解释结果。
-5. 最后阅读对应框架实现或 Stable-Baselines3 / TRL 文档，对照而不替代手写版本。
+$$
+Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha[R_{t+1}+\gamma\max_aQ(S_{t+1},a)-Q(S_t,A_t)].
+$$
 
-## 前置知识
+## 源码与 Notebook
 
-任务 1–2。
+`src/` 提供 `GridWorld`、`first_visit_mc_prediction`、`td0_prediction`、`sarsa` 和 `q_learning`。`01-learning.ipynb` 讲 prediction，`02-experiments.ipynb` 统一比较 DP/MC/TD 与 SARSA/Q-Learning。
 
-## 实现边界与常见提醒
+## 实验要求
 
-明确终止状态是否 bootstrap；用固定 seed 比较均值和方差。
+固定环境、策略、epsilon、alpha、gamma 和至少一个 seed；优先用 RMSE、平均 episode return、到达目标步数和最终策略解释差异。必须明确终止状态是否 bootstrap。
 
-## 当前目录状态
-
-本仓库当前只建立教学骨架，尚未提供标准答案或完整 `eval/run.py`。后续按学习进度补充本任务的精确接口、数值单测和训练脚本；现在可运行：
+## 自检
 
 ```bash
-python eval/run.py
+python eval/run.py --task 3
 ```
 
-它会确认任务骨架已就绪。
-
-## 推荐记录格式
-
-在 `notes/experiment.md` 中记录：日期、Git commit、环境版本、种子、超参、训练步数、最终指标、曲线位置、一个失败现象和你的解释。
-
+实验记录写入 `notes/task-03-tabular-rl.md`。
