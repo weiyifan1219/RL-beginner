@@ -32,7 +32,7 @@ def generate_episode(
 
         if done:
             return episode
-    
+
     return RuntimeError(
         f"Episode did not terminate within {max_steps} steps."
     )
