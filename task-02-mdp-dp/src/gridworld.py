@@ -1,75 +1,179 @@
-"""Sutton & Barto 风格的确定性 4 邻域 GridWorld。"""
+# src/gridworld.py
 
-from __future__ import annotations
-
-from numbers import Integral
-
-import numpy as np
-from numpy.typing import NDArray
-
-from .mdp import TabularMDP
+from typing import Tuple
 
 
-ACTION_NAMES = ("up", "right", "down", "left")
-ACTION_DELTAS = ((-1, 0), (0, 1), (1, 0), (0, -1))
+State = Tuple[int, int]
 
 
-class GridWorld(TabularMDP):
-    """矩形 GridWorld，两端角落为终止状态。
+class GridWorld:
+    """
+    A simple deterministic GridWorld MDP.
 
-    非终止状态每走一步奖励 -1；撞墙会留在原地并仍获得 -1；进入终止角落后 episode
-    结束。终止状态自身是吸收状态，后续奖励为 0。状态按 row-major 编号。
+    State:
+        (row, col)
+
+    Action:
+        0 -> UP
+        1 -> DOWN
+        2 -> LEFT
+        3 -> RIGHT
+
+    Reward:
+        normal step: -1
+        reach goal: +10
     """
 
-    def __init__(self, rows: int = 4, cols: int = 4) -> None:
-        self.rows = self._validate_dimension(rows, "rows")
-        self.cols = self._validate_dimension(cols, "cols")
-        n_states = self.rows * self.cols
-        self.terminal_states = (0, n_states - 1)
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
 
-        table: list[list[list[tuple[float, int, float, bool]]]] = []
-        for state in range(n_states):
-            state_actions: list[list[tuple[float, int, float, bool]]] = []
-            if state in self.terminal_states:
-                for _ in ACTION_NAMES:
-                    state_actions.append([(1.0, state, 0.0, True)])
-            else:
-                row, col = divmod(state, self.cols)
-                for row_delta, col_delta in ACTION_DELTAS:
-                    next_row = min(max(row + row_delta, 0), self.rows - 1)
-                    next_col = min(max(col + col_delta, 0), self.cols - 1)
-                    next_state = next_row * self.cols + next_col
-                    state_actions.append(
-                        [(1.0, next_state, -1.0, next_state in self.terminal_states)]
-                    )
-            table.append(state_actions)
-        super().__init__(table)
+    ACTIONS = [UP, DOWN, LEFT, RIGHT]
 
-    @staticmethod
-    def _validate_dimension(value: int, name: str) -> int:
-        if isinstance(value, bool) or not isinstance(value, Integral) or value < 2:
-            raise ValueError(f"{name} must be an integer >= 2")
-        return int(value)
+    ACTION_NAMES = {
+        UP: "UP",
+        DOWN: "DOWN",
+        LEFT: "LEFT",
+        RIGHT: "RIGHT",
+    }
 
-    def state_to_coord(self, state: int) -> tuple[int, int]:
-        state = self._validate_index(state, self.n_states, "state")
-        return divmod(state, self.cols)
+    ACTION_DELTAS = {
+        UP: (-1, 0),
+        DOWN: (1, 0),
+        LEFT: (0, -1),
+        RIGHT: (0, 1),
+    }
 
-    def coord_to_state(self, coordinate: tuple[int, int]) -> int:
-        if not isinstance(coordinate, tuple) or len(coordinate) != 2:
-            raise TypeError("coordinate must be a (row, col) tuple")
-        row, col = coordinate
-        if (
-            isinstance(row, bool)
-            or isinstance(col, bool)
-            or not isinstance(row, Integral)
-            or not isinstance(col, Integral)
-            or not 0 <= row < self.rows
-            or not 0 <= col < self.cols
-        ):
-            raise IndexError("coordinate lies outside the grid")
-        return int(row) * self.cols + int(col)
+    def __init__(
+        self,
+        height: int = 4,
+        width: int = 4,
+        start_state: State = (0, 0),
+        goal_state: State = (3, 3),
+        obstacles=None,
+        step_reward: float = -1.0,
+        goal_reward: float = 10.0,
+    ):
+        self.height = height
+        self.width = width
 
-    def uniform_random_policy(self) -> NDArray[np.float64]:
-        """返回形状 ``(n_states, 4)``、每行动作概率均为 1/4 的策略。"""
-        return np.full((self.n_states, self.n_actions), 1.0 / self.n_actions, dtype=np.float64)
+        self.start_state = start_state
+        self.goal_state = goal_state
+
+        self.obstacles = set(obstacles or [(1, 1)])
+
+        self.step_reward = step_reward
+        self.goal_reward = goal_reward
+
+        self.state = self.start_state
+
+    def reset(self) -> State:
+        """
+        Reset the environment to the start state.
+        """
+        self.state = self.start_state
+        return self.state
+
+    def is_valid_state(self, state: State) -> bool:
+        """
+        Check whether a state is inside the map and not an obstacle.
+        """
+        row, col = state
+
+        inside_map = (
+            0 <= row < self.height
+            and 0 <= col < self.width
+        )
+
+        return inside_map and state not in self.obstacles
+
+    def is_terminal(self, state: State) -> bool:
+        """
+        Check whether a state is terminal.
+        """
+        return state == self.goal_state
+
+    def get_next_state(
+        self,
+        state: State,
+        action: int,
+    ) -> State:
+        """
+        Compute the next state for a deterministic transition.
+        """
+        if self.is_terminal(state):
+            return state
+
+        if action not in self.ACTIONS:
+            raise ValueError(f"Invalid action: {action}")
+
+        row, col = state
+        d_row, d_col = self.ACTION_DELTAS[action]
+
+        candidate_state = (
+            row + d_row,
+            col + d_col,
+        )
+
+        if not self.is_valid_state(candidate_state):
+            return state
+
+        return candidate_state
+
+    def get_reward(
+        self,
+        state: State,
+        action: int,
+        next_state: State,
+    ) -> float:
+        """
+        Return reward for transition:
+            state --action--> next_state
+        """
+        if next_state == self.goal_state:
+            return self.goal_reward
+
+        return self.step_reward
+
+    def step(self, action: int):
+        """
+        Execute one environment step.
+
+        Returns:
+            next_state
+            reward
+            done
+        """
+        next_state = self.get_next_state(
+            self.state,
+            action,
+        )
+
+        reward = self.get_reward(
+            self.state,
+            action,
+            next_state,
+        )
+
+        done = self.is_terminal(next_state)
+
+        self.state = next_state
+
+        return next_state, reward, done
+
+    def get_states(self):
+        """
+        Return all valid states in the MDP.
+        """
+        states = []
+
+        for row in range(self.height):
+            for col in range(self.width):
+
+                state = (row, col)
+
+                if self.is_valid_state(state):
+                    states.append(state)
+
+        return states

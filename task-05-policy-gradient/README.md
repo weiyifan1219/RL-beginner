@@ -1,54 +1,38 @@
-# 任务五：Policy Gradient
+# 任务五：Policy Gradient、REINFORCE 与 Baseline
 
-> 主路线见仓库根 [README](../README.md)。本任务是一个可逐步填充的学习单元：先推导，再在 `src/` 中手写，再用实验解释现象，最后才对照成熟框架。
+## 目标
 
-## 一句话目标
+直接学习离散动作策略 `pi_theta(a|s)`，理解 likelihood-ratio 梯度、完整回报和 baseline 的方差控制。
 
-直接参数化随机策略，在 REINFORCE 中推导 log-derivative trick，并通过 baseline 和 return normalization 观察方差控制。
+$$
+\nabla_\theta J(\theta)\approx\sum_tG_t\nabla_\theta\log\pi_\theta(A_t\mid S_t).
+$$
 
-## 核心概念
+加入状态 baseline 后：
 
-likelihood ratio；trajectory return；baseline；熵正则
+$$
+A_t=G_t-V_\phi(S_t).
+$$
 
-## 本任务交付
+## 源码契约
 
-实现离散动作 categorical policy、采样轨迹、REINFORCE loss；在 CartPole 对比无 baseline 与 value baseline。
+`policy_network.py` 定义策略分布与动作采样；`reinforce.py` 提供回报计算和 vanilla 更新；`reinforce_baseline.py` 提供 value network、baseline 更新、训练和评估。
 
-## Definition of Done
+## Notebook 架构
 
-- [ ] M1：正确计算折扣回报
-- [ ] M2：实现 REINFORCE
-- [ ] M3：实现 baseline
-- [ ] M4：记录至少 5 个 seed 的均值/方差
-- [ ] M5：解释高方差来源。
+本任务原来有四份 Notebook。现在统一提供：
 
-## 建议步骤
+- `notebooks/01-learning.ipynb`：合并 policy basics、REINFORCE、REINFORCE+baseline 三段学习内容。
+- `notebooks/02-experiments.ipynb`：多 seed、最终窗口和达到阈值的对照实验。
 
-1. 在 `notes/` 手写或整理关键公式，标明每一个期望来自何处。
-2. 先创建最小的、可复现的环境与随机种子，完成 `src/` 的朴素实现。
-3. 增加训练循环和评测循环，输出曲线到 `figures/`、指标到 `notes/`。
-4. 做至少一个只改动一个变量的对照实验，并解释结果。
-5. 最后阅读对应框架实现或 Stable-Baselines3 / TRL 文档，对照而不替代手写版本。
+原始分段 Notebook 保留作细粒度参考，统一入口才是提交路径。
 
-## 前置知识
+## 实验要求
 
-任务 4；math-basics 中 log-derivative trick。
-
-## 实现边界与常见提醒
-
-先验证同一轨迹的 loss 符号，再看学习曲线。
-
-## 当前目录状态
-
-本仓库当前只建立教学骨架，尚未提供标准答案或完整 `eval/run.py`。后续按学习进度补充本任务的精确接口、数值单测和训练脚本；现在可运行：
+至少 5 个 seed，固定 CartPole 和训练预算，比较 vanilla 与 baseline 的均值、标准差、收敛速度和 loss；不要只比较单次最高分。
 
 ```bash
-python eval/run.py
+python eval/run.py --task 5
 ```
 
-它会确认任务骨架已就绪。
-
-## 推荐记录格式
-
-在 `notes/experiment.md` 中记录：日期、Git commit、环境版本、种子、超参、训练步数、最终指标、曲线位置、一个失败现象和你的解释。
-
+实验记录写入 `notes/task05_policy_gradient.md`。

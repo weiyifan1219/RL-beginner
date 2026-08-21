@@ -21,9 +21,11 @@
 
 | 任务 | 状态 | 标准答案 | 教学 Notebook |
 |---|---|---|---|
-| 01 Bandit | ✅ 已完成 | [`src/`](task-01-bandit/src/) | [`task-01-bandit.ipynb`](task-01-bandit/notebooks/task-01-bandit.ipynb) |
-| 02 MDP 与 DP | ✅ 已完成 | [`src/`](task-02-mdp-dp/src/) | [`task-02-mdp-dp.ipynb`](task-02-mdp-dp/notebooks/task-02-mdp-dp.ipynb) |
-| 03–10 | 🚧 按顺序建设 | 各任务完成后独立提交 | 各任务完成后提供 |
+| 01 Bandit | ✅ 实现与教学材料 | [`src/`](task-01-bandit/src/) | [`01-learning`](task-01-bandit/notebooks/01-learning.ipynb) + [`02-experiments`](task-01-bandit/notebooks/02-experiments.ipynb) |
+| 02 MDP 与 DP | ✅ 实现与教学材料 | [`src/`](task-02-mdp-dp/src/) | [`01-learning`](task-02-mdp-dp/notebooks/01-learning.ipynb) + [`02-experiments`](task-02-mdp-dp/notebooks/02-experiments.ipynb) |
+| 03–06 | ✅ 源码、Notebook 与笔记已补齐 | 各任务 README 与 notes | 各任务 `01-learning` + `02-experiments` |
+| 07 TRPO/PPO | ✅ 源码、Notebook 与笔记已补齐 | [`src/`](task-07-trpo_ppo/src/) | [`01-learning`](task-07-trpo_ppo/notebooks/01-learning.ipynb) + [`02-experiments`](task-07-trpo_ppo/notebooks/02-experiments.ipynb) |
+| 08–10 | 🚧 按顺序建设 | 各任务完成后独立提交 | 各任务完成后提供 |
 
 > 前 1–8 个任务以经典控制环境和小型实验为主；任务 9–10 再连接到本地 Qwen、偏好优化、agentic rollout 与训练基础设施。默认不下载大模型，优先复用已有本地模型目录或 OpenAI 兼容推理服务。
 
@@ -78,3 +80,15 @@ python eval/run.py
 ## 许可证
 
 [MIT License](LICENSE)。
+
+## Task 1--7 当前交付约定
+
+本阶段以 3090 工作树中的实际源码和 Notebook 为准。每个任务 README 说明当前模块契约、公式、实验要求和提交文件；每个任务至少有一个学习入口和一个实验入口。Task 05 的原始四份 Notebook 已额外合并为规范的 `01-learning.ipynb` / `02-experiments.ipynb`，Task 06 的异常命名 Notebook 也提供了规范入口。
+
+统一检查命令：
+
+```bash
+python eval/run.py
+```
+
+该检查验证 README、notes、Notebook JSON/cell id/Markdown 公式和源码最小导入；它不替代训练实验，也不会把未记录的实验结果当作结论。

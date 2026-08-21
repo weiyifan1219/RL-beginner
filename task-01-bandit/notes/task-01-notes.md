@@ -21,21 +21,21 @@ Task 1 的目标不是掌握复杂的强化学习算法，而是建立强化学�
 
 假设共有 \(K\) 个区域：
 
-\[
+$$
 A_t \in \{0,1,\ldots,K-1\}
-\]
+$$
 
 机器人每次选择一个区域 \(A_t\)，环境返回一个 Reward：
 
-\[
+$$
 R_t
-\]
+$$
 
 在当前 Bernoulli Bandit 中：
 
-\[
+$$
 R_t \in \{0,1\}
-\]
+$$
 
 其中：
 
@@ -46,25 +46,25 @@ R_t \in \{0,1\}
 
 例如：
 
-\[
+$$
 q_* = [0.15,0.30,0.45,0.60,0.75]
-\]
+$$
 
 则 Area 4 的真实价值为：
 
-\[
+$$
 q_*(4)=0.75
-\]
+$$
 
 表示每次选择 Area 4：
 
-\[
+$$
 P(R=1|A=4)=0.75
-\]
+$$
 
-\[
+$$
 P(R=0|A=4)=0.25
-\]
+$$
 
 需要注意，**动作固定并不意味着每次 Reward 固定**。固定的是该动作对应的 Reward Distribution。
 
@@ -76,9 +76,9 @@ P(R=0|A=4)=0.25
 
 ### 3.1 Reward
 
-\[
+$$
 R_t
-\]
+$$
 
 表示第 \(t\) 次交互实际获得的奖励。
 
@@ -86,11 +86,11 @@ R_t
 
 ### 3.2 真实动作价值
 
-\[
+$$
 q_*(a)
 =
 \mathbb{E}[R_t|A_t=a]
-\]
+$$
 
 表示如果长期选择动作 \(a\)，能够获得的平均 Reward。
 
@@ -98,19 +98,19 @@ q_*(a)
 
 ### 3.3 Agent 的动作价值估计
 
-\[
+$$
 Q_t(a)
-\]
+$$
 
 表示 Agent 根据当前已经获得的数据，对 \(q_*(a)\) 的估计。
 
 因此学习过程可以理解为：
 
-\[
+$$
 Q_t(a)
 \rightarrow
 q_*(a)
-\]
+$$
 
 ---
 
@@ -118,24 +118,24 @@ q_*(a)
 
 如果动作 \(a\) 已经被选择 \(N(a)\) 次，其 Reward 为：
 
-\[
+$$
 R_1,R_2,\ldots,R_N
-\]
+$$
 
 那么最直接的估计是：
 
-\[
+$$
 Q(a)
 =
 \frac{1}{N}
 \sum_{i=1}^{N}R_i
-\]
+$$
 
 但没有必要保存所有历史 Reward。
 
 可以使用增量形式：
 
-\[
+$$
 \boxed{
 Q(a)
 \leftarrow
@@ -144,19 +144,19 @@ Q(a)
 \frac{1}{N(a)}
 [R-Q(a)]
 }
-\]
+$$
 
 其中：
 
-\[
+$$
 R-Q(a)
-\]
+$$
 
 表示新观察与当前估计之间的误差。
 
 可以把整个更新统一理解为：
 
-\[
+$$
 \boxed{
 New
 =
@@ -166,19 +166,19 @@ StepSize
 \times
 Error
 }
-\]
+$$
 
 在当前 Sample Average 中：
 
-\[
+$$
 \alpha=\frac{1}{N(a)}
-\]
+$$
 
 所以：
 
-\[
+$$
 Q(a)\leftarrow Q(a)+\alpha[R-Q(a)]
-\]
+$$
 
 这个结构在后续 TD、Q-Learning 等算法中还会再次出现。
 
@@ -224,7 +224,7 @@ agent.update(action, reward)
 
 也就是：
 
-\[
+$$
 Agent
 \rightarrow
 Action
@@ -234,7 +234,7 @@ Environment
 Reward
 \rightarrow
 Agent
-\]
+$$
 
 这就是强化学习最基础的交互闭环。
 
@@ -244,11 +244,11 @@ Agent
 
 Greedy 的决策规则是：
 
-\[
+$$
 A_t
 =
 \arg\max_a Q_t(a)
-\]
+$$
 
 即：
 
@@ -260,9 +260,9 @@ Greedy 的问题是，早期 Reward 含有随机性。
 
 例如某个真实价值较低的区域第一次恰好获得：
 
-\[
+$$
 R=1
-\]
+$$
 
 那么它的 \(Q(a)\) 可能暂时非常高。
 
@@ -270,13 +270,13 @@ R=1
 
 因此：
 
-\[
+$$
 \boxed{
 价值估计方法正确
 \neq
 动作选择策略正确
 }
-\]
+$$
 
 ---
 
@@ -296,13 +296,13 @@ R=1
 
 因此 Bandit 的核心问题是：
 
-\[
+$$
 \boxed{
 Exploration
 \quad vs\quad
 Exploitation
 }
-\]
+$$
 
 只利用可能过早相信错误判断；
 
@@ -314,19 +314,19 @@ Exploitation
 
 ε-Greedy 是最简单的探索策略。
 
-\[
+$$
 A_t=
 \begin{cases}
 \text{random action}, & \text{概率 }\epsilon\\
 \arg\max_a Q_t(a), & \text{概率 }1-\epsilon
 \end{cases}
-\]
+$$
 
 例如：
 
-\[
+$$
 \epsilon=0.1
-\]
+$$
 
 表示大约：
 
@@ -347,17 +347,17 @@ A_t=
 
 Upper Confidence Bound 的核心思想是：
 
-\[
+$$
 \boxed{
 当前估计价值
 +
 不确定性奖励
 }
-\]
+$$
 
 常见形式：
 
-\[
+$$
 A_t
 =
 \arg\max_a
@@ -370,33 +370,33 @@ c
 {N_t(a)}
 }
 \right]
-\]
+$$
 
 其中：
 
-\[
+$$
 Q_t(a)
-\]
+$$
 
 表示当前价值估计；
 
 而：
 
-\[
+$$
 c
 \sqrt{
 \frac{\ln t}
 {N_t(a)}
 }
-\]
+$$
 
 是 Exploration Bonus。
 
 如果：
 
-\[
+$$
 N(a)
-\]
+$$
 
 很小，说明这个动作探索得少，Bonus 会较大。
 
@@ -406,11 +406,11 @@ N(a)
 
 可以把它概括成：
 
-\[
+$$
 \boxed{
 Optimism\ Under\ Uncertainty
 }
-\]
+$$
 
 ---
 
@@ -418,56 +418,56 @@ Optimism\ Under\ Uncertainty
 
 当前环境的 Reward 为 Bernoulli：
 
-\[
+$$
 R\in\{0,1\}
-\]
+$$
 
 因此可以为每个动作的未知成功概率维护 Beta 分布：
 
-\[
+$$
 p_a
 \sim
 Beta(\alpha_a,\beta_a)
-\]
+$$
 
 初始：
 
-\[
+$$
 \alpha_a=1,\qquad\beta_a=1
-\]
+$$
 
 找到宝物：
 
-\[
+$$
 \alpha_a
 \leftarrow
 \alpha_a+1
-\]
+$$
 
 没有找到：
 
-\[
+$$
 \beta_a
 \leftarrow
 \beta_a+1
-\]
+$$
 
 动作选择时，从每个动作的后验分布中采样：
 
-\[
+$$
 \tilde p_a
 \sim
 Beta(\alpha_a,\beta_a)
-\]
+$$
 
 然后：
 
-\[
+$$
 A_t
 =
 \arg\max_a
 \tilde p_a
-\]
+$$
 
 Thompson Sampling 的核心区别是：
 
@@ -491,13 +491,13 @@ Task 1 不需要记住谁“绝对最好”。
 
 真正需要掌握的是：
 
-\[
+$$
 \boxed{
 它们是在用不同的方法解决同一个
 Exploration\text{-}Exploitation
 问题
 }
-\]
+$$
 
 ---
 
@@ -507,13 +507,13 @@ Exploration\text{-}Exploitation
 
 进行多次独立实验时：
 
-\[
+$$
 \bar R_t
 =
 \frac{1}{M}
 \sum_{i=1}^{M}
 R_t^{(i)}
-\]
+$$
 
 表示在第 \(t\) 个 step，多个独立实验平均获得多少 Reward。
 
@@ -523,12 +523,12 @@ R_t^{(i)}
 
 ### Cumulative Reward
 
-\[
+$$
 C_T
 =
 \sum_{t=1}^{T}
 R_t
-\]
+$$
 
 表示：
 
@@ -538,15 +538,15 @@ R_t
 
 如果真实最优动作是：
 
-\[
+$$
 a^*
 =
 \arg\max_a q_*(a)
-\]
+$$
 
 那么：
 
-\[
+$$
 OptimalActionRate_t
 =
 \frac{1}{M}
@@ -555,7 +555,7 @@ OptimalActionRate_t
 (
 A_t^{(i)}=a^*
 )
-\]
+$$
 
 它衡量的是：
 
@@ -577,19 +577,19 @@ Bandit 中同时存在：
 
 因此：
 
-\[
+$$
 \boxed{
 单次实验结果
 \neq
 算法真实表现
 }
-\]
+$$
 
 通常需要进行多次独立实验：
 
-\[
+$$
 n_{runs}=100,\ 200,\ldots
-\]
+$$
 
 然后对不同 run 的结果求平均，近似算法的期望性能。
 
@@ -651,15 +651,15 @@ Task 1 中有一个重要假设：
 
 因此不存在真正的状态变化：
 
-\[
+$$
 A_t
 \rightarrow
 R_t
-\]
+$$
 
 但如果取消“自动返回基地”，机器人需要在地图中真正移动：
 
-\[
+$$
 当前位置
 \rightarrow
 选择动作
@@ -669,19 +669,19 @@ R_t
 获得奖励
 \rightarrow
 继续决策
-\]
+$$
 
 这时当前决策会影响未来状态。
 
 于是需要引入：
 
-\[
+$$
 S_t
-\]
+$$
 
 并将问题升级为：
 
-\[
+$$
 \boxed{
 S_t
 \rightarrow
@@ -689,15 +689,15 @@ A_t
 \rightarrow
 R_{t+1},S_{t+1}
 }
-\]
+$$
 
 这就是下一阶段需要学习的：
 
-\[
+$$
 \boxed{
 Markov\ Decision\ Process\ (MDP)
 }
-\]
+$$
 
 ---
 
@@ -705,7 +705,7 @@ Markov\ Decision\ Process\ (MDP)
 
 Task 1 可以压缩成一句话：
 
-\[
+$$
 \boxed{
 Agent
 通过与未知环境反复交互，
@@ -713,6 +713,30 @@ Agent
 并在 Exploration 与 Exploitation 之间进行权衡，
 最终学会选择更好的动作。
 }
-\]
+$$
 
 到这里，Multi-Armed Bandit 部分结束。
+
+
+---
+
+## Task 01 实验记录
+
+比较四种策略时固定 treasure_probs、步数和 seed；至少记录单轨迹与多 run 的奖励、最优动作率、访问次数和一个探索失败现象。
+
+| 项目 | 记录 |
+|---|---|
+| 日期 / commit | |
+| Python / PyTorch / Gymnasium | |
+| 随机种子 | |
+| 环境与任务配置 | |
+| 训练步数或 episode | |
+| 最终指标 | |
+| 曲线 / 输出文件 | |
+| 失败现象 | |
+| 解释与下一步 | |
+
+
+## 公式渲染约定
+
+本笔记的块级公式统一使用成对的 `$$` 包裹，行内公式使用单个 `$`；不要把公式放在 ```text 代码块中，否则 Markdown 渲染器会按普通文本显示。

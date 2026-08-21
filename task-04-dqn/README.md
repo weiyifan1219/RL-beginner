@@ -1,54 +1,34 @@
 # 任务四：DQN 与稳定的价值学习
 
-> 主路线见仓库根 [README](../README.md)。本任务是一个可逐步填充的学习单元：先推导，再在 `src/` 中手写，再用实验解释现象，最后才对照成熟框架。
+## 目标
 
-## 一句话目标
+将表格 Q-Learning 推进到 CartPole 上的函数逼近。DQN 的 TD target 为：
 
-从表格 Q-Learning 推进到函数逼近：在 CartPole 上手写 DQN，并通过 replay buffer 与 target network 观察稳定性差异。
+$$
+y_t=r_t+\gamma(1-d_t)\max_{a'}Q_{\theta^-}(s_{t+1},a').
+$$
 
-## 核心概念
+其中 `theta-` 是 target network 参数。
 
-函数逼近；experience replay；target network；ε schedule；过估计
+## 源码契约
 
-## 本任务交付
+| 文件 | 作用 |
+|---|---|
+| `src/q_network.py` | 状态到各动作 Q 值的 MLP |
+| `src/replay_buffer.py` | transition 存储与随机 batch 采样 |
+| `src/dqn_agent.py` | epsilon-greedy、TD loss、target 同步 |
 
-实现 MLP Q-network、replay buffer、训练/评估分离和 TensorBoard 曲线；进阶实现 Double DQN。
+## 学习与实验要求
 
-## Definition of Done
+1. 先检查网络输出形状和 replay buffer 样本形状。
+2. 在 CartPole 训练并分离训练/评估环境。
+3. 记录 epsilon、episode return、loss 和评估回报。
+4. 做一个单变量消融：去掉 replay 或 target network，解释稳定性变化。
 
-- [ ] M1：replay buffer 随机采样
-- [ ] M2：DQN TD target
-- [ ] M3：周期性 target 同步
-- [ ] M4：CartPole 达到预先约定阈值
-- [ ] M5：移除稳定化组件的失败对照。
-
-## 建议步骤
-
-1. 在 `notes/` 手写或整理关键公式，标明每一个期望来自何处。
-2. 先创建最小的、可复现的环境与随机种子，完成 `src/` 的朴素实现。
-3. 增加训练循环和评测循环，输出曲线到 `figures/`、指标到 `notes/`。
-4. 做至少一个只改动一个变量的对照实验，并解释结果。
-5. 最后阅读对应框架实现或 Stable-Baselines3 / TRL 文档，对照而不替代手写版本。
-
-## 前置知识
-
-任务 3、PyTorch autograd。
-
-## 实现边界与常见提醒
-
-不要直接使用 Stable-Baselines3；先保障 target 张量不参与梯度。
-
-## 当前目录状态
-
-本仓库当前只建立教学骨架，尚未提供标准答案或完整 `eval/run.py`。后续按学习进度补充本任务的精确接口、数值单测和训练脚本；现在可运行：
+`01-learning.ipynb` 负责接口和 TD target，`02-experiments.ipynb` 负责训练、评估和曲线。
 
 ```bash
-python eval/run.py
+python eval/run.py --task 4
 ```
 
-它会确认任务骨架已就绪。
-
-## 推荐记录格式
-
-在 `notes/experiment.md` 中记录：日期、Git commit、环境版本、种子、超参、训练步数、最终指标、曲线位置、一个失败现象和你的解释。
-
+实验记录写入 `notes/task04_dqn.md`。

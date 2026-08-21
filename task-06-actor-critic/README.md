@@ -1,54 +1,33 @@
-# 任务六：Actor-Critic 与 GAE
+# 任务六：Actor-Critic、n-step 与 GAE
 
-> 主路线见仓库根 [README](../README.md)。本任务是一个可逐步填充的学习单元：先推导，再在 `src/` 中手写，再用实验解释现象，最后才对照成熟框架。
+## 目标
 
-## 一句话目标
+让 Actor 学策略、Critic 学状态价值，用 TD residual 降低 REINFORCE 的方差。
 
-将策略网络和值函数组合为 Actor-Critic，推导 TD residual 与 generalized advantage estimation（GAE），理解 bias-variance 折中。
+$$
+\delta_t=R_{t+1}+\gamma(1-d_t)V(S_{t+1})-V(S_t).
+$$
 
-## 核心概念
+GAE 将多个时间尺度的 residual 衰减组合：
 
-actor/critic；TD residual；n-step return；GAE；advantage normalization
+$$
+\hat A_t^{GAE(\gamma,\lambda)}=\sum_{l=0}^{\infty}(\gamma\lambda)^l\delta_{t+l}.
+$$
 
-## 本任务交付
+## 源码契约
 
-实现同步 A2C 风格 rollout buffer、actor/critic loss、GAE；比较 λ=0、0.95、1 的训练行为。
+`src/networks.py` 提供 Actor/Critic；`actor_critic.py` 是 one-step agent；`n_step_actor_critic.py` 是 n-step agent。终止和时间截断要区分，只有真正终止才清零 bootstrap。
 
-## Definition of Done
+## Notebook 架构
 
-- [ ] M1：actor 与 critic 分离输出
-- [ ] M2：TD target 正确处理 terminated/truncated
-- [ ] M3：GAE 实现
-- [ ] M4：至少三组 λ 消融
-- [ ] M5：记录 entropy/value loss。
+规范入口为 `notebooks/01-learning.ipynb` 与 `notebooks/02-experiments.ipynb`。前者由原来的 `actor_critic.ipynb.ipynb` 整理而来，后者用于 one-step/n-step、lambda 和训练曲线对照；原文件保留。
 
-## 建议步骤
+## 实验要求
 
-1. 在 `notes/` 手写或整理关键公式，标明每一个期望来自何处。
-2. 先创建最小的、可复现的环境与随机种子，完成 `src/` 的朴素实现。
-3. 增加训练循环和评测循环，输出曲线到 `figures/`、指标到 `notes/`。
-4. 做至少一个只改动一个变量的对照实验，并解释结果。
-5. 最后阅读对应框架实现或 Stable-Baselines3 / TRL 文档，对照而不替代手写版本。
-
-## 前置知识
-
-任务 5。
-
-## 实现边界与常见提醒
-
-此处不做 PPO clip；先把 advantage 的时间倒序递推写对。
-
-## 当前目录状态
-
-本仓库当前只建立教学骨架，尚未提供标准答案或完整 `eval/run.py`。后续按学习进度补充本任务的精确接口、数值单测和训练脚本；现在可运行：
+固定环境和 rollout budget，比较 one-step 与 n-step；若运行 GAE 扩展，至少比较 lambda=0、0.95、1，记录 return、actor loss、critic loss、entropy 和达到阈值的 episode。
 
 ```bash
-python eval/run.py
+python eval/run.py --task 6
 ```
 
-它会确认任务骨架已就绪。
-
-## 推荐记录格式
-
-在 `notes/experiment.md` 中记录：日期、Git commit、环境版本、种子、超参、训练步数、最终指标、曲线位置、一个失败现象和你的解释。
-
+实验记录写入 `notes/task06_actor_critic_notes.md`。
